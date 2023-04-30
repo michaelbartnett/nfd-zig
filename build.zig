@@ -54,7 +54,7 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const lib = makeLib(b, target, optimize);
-    lib.install();
+    b.installArtifact(lib);
 
     var demo = b.addExecutable(.{
         .name = "demo",
@@ -64,9 +64,9 @@ pub fn build(b: *std.Build) void {
     });
     demo.addModule("nfd", getModule(b));
     demo.linkLibrary(lib);
-    demo.install();
+    b.installArtifact(demo);
 
-    const run_demo_cmd = demo.run();
+    const run_demo_cmd = b.addRunArtifact(demo);
     run_demo_cmd.step.dependOn(b.getInstallStep());
 
     const run_demo_step = b.step("run", "Run the demo");
