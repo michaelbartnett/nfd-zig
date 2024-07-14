@@ -356,7 +356,9 @@ static nfdresult_t SetDefaultPath( IFileDialog *dialog, const char *defaultPath 
     CopyNFDCharToWChar( defaultPath, &defaultPathW );
 
     IShellItem *folder;
-    HRESULT result = SHCreateItemFromParsingName( defaultPathW, NULL, IID_PPV_ARGS(&folder) );
+    // TODO: zig/llvm compiler bug
+    // HRESULT result = SHCreateItemFromParsingName( defaultPathW, NULL, IID_PPV_ARGS(&folder) );
+    HRESULT result = SHCreateItemFromParsingName( defaultPathW, NULL, __uuidof(*folder), (void**)&folder );
 
     // Valid non results.
     if ( result == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND) || result == HRESULT_FROM_WIN32(ERROR_INVALID_DRIVE) )
